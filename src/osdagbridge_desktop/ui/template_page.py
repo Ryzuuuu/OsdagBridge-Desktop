@@ -785,7 +785,7 @@ class CustomWindow(QWidget):
                     self.plots_widget.link_output_dock(self.output_dock)
 
                     # Render 3D cad using the parameters from Backend
-                    self.cad_3d_widget.render_3d_cad(self.backend.get_3d_cad_parameters())
+                    self.cad_3d_widget.render_3d_cad(self.backend.get_3d_cad_parameters(), self.backend.input_dict.get(KEY_TS_OVERALL_WIDTH))
                     # Update design status
                     self.backend.design_completed = True
 

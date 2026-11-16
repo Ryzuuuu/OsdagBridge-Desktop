@@ -194,7 +194,7 @@ class CAD3DWindow(QWidget):
 
     # ── RENDER / CLEAR ────────────────────────────────────────────────────────
 
-    def render_3d_cad(self, design_params: BridgeParametersDTO):
+    def render_3d_cad(self, design_params: BridgeParametersDTO, overall_width_m=None):
         """
         Generate and render the 3D bridge model on the display.
         Shows the component selector checkboxes after rendering.
@@ -224,7 +224,7 @@ class CAD3DWindow(QWidget):
 
         # Update info table
         if hasattr(self, "update_info_table"):
-            self.update_info_table(design_params)
+            self.update_info_table(design_params, overall_width_m)
 
     def clear_3d_cad(self):
         """
@@ -604,14 +604,17 @@ class CAD3DWindow(QWidget):
         tbl_w = self._info_table.width()
         self._info_table.move(margin, h - tbl_h - margin)
 
-    def update_info_table(self, params: "BridgeParametersDTO"):
+    def update_info_table(self, params: "BridgeParametersDTO", overall_width_m=None):
         """Populate the info table from design params."""
         if not hasattr(self, "_info_value_labels"):
             return
 
         # Get total bridge width from generator model data (already computed)
         model_data = getattr(self.generator, "model_data", None)
-        if model_data and "total_deck_width" in model_data:
+        if overall_width_m is not None:
+            # Overall width from the design inputs (includes footpaths, railings and median)
+            bridge_width_mm = float(overall_width_m) * 1000
+        elif model_data and "total_deck_width" in model_data:
             bridge_width_mm = model_data["total_deck_width"]
         else:
             # Fallback: carriageway + footpaths
